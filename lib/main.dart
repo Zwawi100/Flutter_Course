@@ -65,13 +65,109 @@ class _HomePageState extends State<HomePage>
   }
 }
 
-class OverView extends StatelessWidget {
+class OverView extends StatefulWidget {
   const OverView({super.key});
 
   @override
+  State<OverView> createState() => _OverViewState();
+}
+
+class _OverViewState extends State<OverView> {
+  final TextEditingController _textController = TextEditingController();
+    final List<String> _itmes = [
+      "blabla",
+      "shrimp",
+      "jackson","messi","cr7","mo salah" ,"salad", "orange" , "walk","run","survive"
+    ];
+
+    List<String> _filteredList = [];
+    bool _isTapped = false;
+
+    @override
+  void initState() {
+    super.initState();
+    _filteredList = _itmes;
+  }
+
+  // develop _filterSearchResults function
+  void _filterSearchResults(String query){
+    setState(() {
+      if(query.isEmpty){
+        _filteredList = _itmes;
+      } else {
+        _filteredList =
+         _itmes.where((item) => item.toLowerCase().contains(query.toLowerCase())).toList();
+      }
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("Overview page"),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Search for ..',
+            style: TextStyle(fontSize: 15, color: Colors.blueGrey),),
+            SizedBox(height: 10),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.black, width: 0.8)
+              ),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      hintText: 'Search ....',
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      border: InputBorder.none,
+                      suffixIcon: Icon(Icons.arrow_drop_down)
+                    ),
+                    onChanged: (value){
+                      // filter
+                      _filterSearchResults(value);
+                      setState(() {
+                        _isTapped = true;
+                      });
+                      // set state 
+                    },
+                    onTap: () {
+                      setState(() {
+                        _isTapped = true;
+                      });
+                    },
+                  ),
+
+                  _isTapped && _filteredList.isNotEmpty ?
+                  Container(
+                    height: 150,
+                    color: Colors.grey.shade200,
+                    child: ListView.builder(
+                      itemCount: _filteredList.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: (){
+                            setState(() {
+                              _textController.text = _filteredList[index];
+                              _isTapped = false;
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                            child: Text(_filteredList[index],style: TextStyle(fontSize: 15, color: Colors.black87),),
+                            ),
+                        );
+                      }),
+                  ) : SizedBox.shrink(),
+                ],
+              ),
+            )
+          ],
+        ),
+        
+        
+        
     );
   }
 }
