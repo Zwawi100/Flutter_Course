@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Lab1());
+  runApp(Lab2());
 }
 
-class Lab1 extends StatelessWidget {
-  const Lab1({super.key});
+class Lab2 extends StatelessWidget {
+  const Lab2({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,65 +23,78 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
 
-  final List<Widget> _selectedScreen = [
-    HomeScreen(),
-    SearchScreen(),
-    ProductScreen()
-  ];
-
-  void _tapBottomItem(int index){
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    _tabController = TabController(length: 3, vsync: this);
+    super.initState();
   }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _selectedScreen[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-      currentIndex:_selectedIndex ,
-      onTap: _tapBottomItem ,
-      items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home) , label: "Home" ,backgroundColor: Colors.blue),
-        BottomNavigationBarItem(icon: Icon(Icons.task) , label: "Task" ,backgroundColor: Colors.orange),
-        BottomNavigationBarItem(icon: Icon(Icons.person) , label: "Profile" ,backgroundColor: Colors.brown)
-      ]),
+      appBar: AppBar(
+        bottom: TabBar(controller: _tabController, tabs: [
+          Tab(
+            text: "Overview",
+            icon: Icon(Icons.assignment),
+          ),
+          Tab(
+            text: "Details",
+            icon: Icon(Icons.details),
+          ),
+          Tab(
+            text: "Settings",
+            icon: Icon(Icons.settings),
+          ),
+        ]),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          OverView(),
+          Details(),
+          settings()
+        ]),
     );
   }
 }
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class OverView extends StatelessWidget {
+  const OverView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Hello from Home Page"),),
+    return Center(
+      child: Text("Overview page"),
     );
   }
 }
-
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({super.key});
+class Details extends StatelessWidget {
+  const Details({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Hello from Task Page"),),
+    return Center(
+      child: Text("Details page"),
     );
   }
 }
-
-class ProductScreen extends StatelessWidget {
-  const ProductScreen({super.key});
+class settings extends StatelessWidget {
+  const settings({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Hello from Profile Page"),),
+    return Center(
+      child: Text("Settings page"),
     );
   }
 }
