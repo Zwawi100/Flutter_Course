@@ -1,7 +1,8 @@
+import 'package:day1lab/lab1.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Lab2());
+  runApp(Lab1());
 }
 
 class Lab2 extends StatelessWidget {
