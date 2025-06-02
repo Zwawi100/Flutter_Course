@@ -59,15 +59,12 @@ class _HomePageState extends State<HomePage>
         ]),
       ),
       body: TabBarView(
-        controller: _tabController,
-        children: [
-          OverView(),
-          Details(),
-          settings()
-        ]),
+          controller: _tabController,
+          children: [OverView(), Details(), settings()]),
     );
   }
 }
+
 class OverView extends StatelessWidget {
   const OverView({super.key});
 
@@ -78,16 +75,46 @@ class OverView extends StatelessWidget {
     );
   }
 }
-class Details extends StatelessWidget {
+
+class Details extends StatefulWidget {
   const Details({super.key});
 
   @override
+  State<Details> createState() => _DetailsState();
+}
+
+class _DetailsState extends State<Details> {
+  String? _selectedValue;
+  List<String> _items = ["hello", "Hola", "bonjour", "bonsoir", "Hi"];
+  @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("Details page"),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DropdownButton<String>(
+            hint: Text("Select your ....."),
+              items: _items.map((String item) {
+                return DropdownMenuItem<String>(
+                    value: item, child: Text(item));
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedValue = newValue;
+                });
+              }),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            _selectedValue == null ? "no selected value":
+            "Your selected item: $_selectedValue")
+        ],
+      ),
     );
   }
 }
+
 class settings extends StatelessWidget {
   const settings({super.key});
 
